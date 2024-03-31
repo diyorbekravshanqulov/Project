@@ -84,7 +84,6 @@ export class Users extends Model<Users, IUserCreationAttr> {
   })
   @Column({
     type: DataType.BOOLEAN,
-    defaultValue: false,
   })
   isOwner: boolean;
 
