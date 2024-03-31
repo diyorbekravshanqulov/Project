@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsString } from 'class-validator';
 
-export class CreateComfortDto {
+export class CreateRegionDto {
   @IsNotEmpty()
   @IsString()
   name: string;

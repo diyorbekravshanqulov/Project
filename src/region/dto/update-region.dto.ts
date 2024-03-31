@@ -1,7 +1,7 @@
 import { IsOptional, IsString } from 'class-validator';
 
-export class UpdateComfortDto {
+export class UpdateRegionDto {
   @IsOptional()
   @IsString()
-  name?: string;
+  name: string;
 }

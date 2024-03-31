@@ -1,26 +1,36 @@
 import { Injectable } from '@nestjs/common';
 import { CreateComfortDto } from './dto/create-comfort.dto';
 import { UpdateComfortDto } from './dto/update-comfort.dto';
+import { InjectModel } from '@nestjs/sequelize';
+import { Comfort } from './model/comfort.model';
 
 @Injectable()
 export class ComfortService {
-  create(createComfortDto: CreateComfortDto) {
-    return 'This action adds a new comfort';
+  constructor(@InjectModel(Comfort) private comfortRepo: typeof Comfort) {}
+
+  async create(createComfortDto: CreateComfortDto) {
+    return this.comfortRepo.create(createComfortDto);
   }
 
-  findAll() {
-    return `This action returns all comfort`;
+  async findAll() {
+    return this.comfortRepo.findAll();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} comfort`;
+  async findOne(id: number) {
+    return this.comfortRepo.findByPk(id);
   }
 
-  update(id: number, updateComfortDto: UpdateComfortDto) {
-    return `This action updates a #${id} comfort`;
+  async update(id: number, updateComfortDto: UpdateComfortDto) {
+    const comfort = await this.comfortRepo.update(updateComfortDto, {
+      where: { id },
+      returning: true,
+    });
+    return comfort[1][0];
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} comfort`;
+  async remove(id: number) {
+    const comfortRows = await this.comfortRepo.destroy({ where: { id } });
+    if (comfortRows == 0) return 'Not found';
+    return 'successfully removed';
   }
 }

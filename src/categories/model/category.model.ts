@@ -1,4 +1,5 @@
 import {
+  BelongsTo,
   Column,
   DataType,
   ForeignKey,
@@ -30,4 +31,7 @@ export class Category extends Model<Category, CategoryCreationAttr> {
     type: DataType.INTEGER,
   })
   parentId: number;
+
+  @BelongsTo(() => Category)
+  category: Category;
 }
