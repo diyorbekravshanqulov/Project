@@ -15,43 +15,49 @@ import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
 import { Users } from './model/user.model';
 
-@ApiTags('Users')
-@Controller('users')
+@ApiTags('Users') // Tags the controller with 'Users' for Swagger documentation
+@Controller('users') // Defines the base route for this controller
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @ApiOperation({ summary: 'register user' })
-  @ApiResponse({ status: 201, type: Users })
-  @Post('signup')
+  // Endpoint for user registration
+  @ApiOperation({ summary: 'Register a new user' }) // Description for Swagger documentation
+  @ApiResponse({ status: 201, type: Users }) // Response definition for Swagger documentation
+  @Post('signup') // Defines HTTP POST method and endpoint route
   registration(
-    @Body() createUserDto: CreateUserDto,
-    @Res({ passthrough: true }) res: Response,
+    @Body() createUserDto: CreateUserDto, // Request body containing user data
+    @Res({ passthrough: true }) res: Response, // Express Response object for setting cookies
   ) {
-    return this.usersService.registration(createUserDto, res);
+    return this.usersService.registration(createUserDto, res); // Calls the registration method from the service
   }
 
-  @Post()
+  // Endpoint for creating a new user
+  @Post() // Defines HTTP POST method and endpoint route
   async create(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.create(createUserDto);
+    return this.usersService.create(createUserDto); // Calls the create method from the service
   }
 
-  @Get()
+  // Endpoint for retrieving all users
+  @Get() // Defines HTTP GET method and endpoint route
   async findAll() {
-    return this.usersService.findAll();
+    return this.usersService.findAll(); // Calls the findAll method from the service
   }
 
-  @Get(':id')
+  // Endpoint for retrieving a user by ID
+  @Get(':id') // Defines HTTP GET method and endpoint route with a parameter
   async findOne(@Param('id') id: string) {
-    return this.usersService.findOne(+id);
+    return this.usersService.findOne(+id); // Calls the findOne method from the service
   }
 
-  @Patch(':id')
+  // Endpoint for updating a user by ID
+  @Patch(':id') // Defines HTTP PATCH method and endpoint route with a parameter
   async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(+id, updateUserDto);
+    return this.usersService.update(+id, updateUserDto); // Calls the update method from the service
   }
 
-  @Delete(':id')
+  // Endpoint for deleting a user by ID
+  @Delete(':id') // Defines HTTP DELETE method and endpoint route with a parameter
   async remove(@Param('id') id: string) {
-    return this.usersService.remove(+id);
+    return this.usersService.remove(+id); // Calls the remove method from the service
   }
 }

@@ -1,14 +1,19 @@
+// Importing necessary modules
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as cookieParser from 'cookie-parser';
 
+// Function to start the Nest.js application
 async function start() {
   try {
     const PORT = process.env.PORT || 3030; // Default port to 3000 if PORT environment variable is not set
 
+    // Create an instance of Nest application
     const app = await NestFactory.create(AppModule);
+
+    // Define Swagger document configuration
     const config = new DocumentBuilder()
       .setTitle('Stadium Project')
       .setDescription('Stadium REST API')
@@ -16,17 +21,29 @@ async function start() {
       .addTag('NestJS, Nodejs, Postgres, Bot, SMS, Sequezlize, Swagger, Mailer')
       .build();
 
+    // Generate Swagger documentation
     const document = SwaggerModule.createDocument(app, config);
     SwaggerModule.setup('docs', app, document);
+
+    // Use cookie parser middleware
     app.use(cookieParser());
+
+    // Set global prefix for API routes
     app.setGlobalPrefix('api');
+
+    // Apply global validation pipe for input validation
     app.useGlobalPipes(new ValidationPipe());
-    await app.listen(PORT); // Removed the callback function from listen(), unnecessary since we're already using async/await
-    console.log(` http://localhost:${PORT}`);
+
+    // Start listening for incoming connections on the specified port
+    await app.listen(PORT);
+
+    // Log server start message
+    console.log(`Server is running on http://localhost:${PORT}`);
   } catch (error) {
-    console.error('Error starting server:', error); // Log error with console.error for better visibility
+    // Log any errors that occur during server startup
+    console.error('Error starting server:', error);
   }
 }
 
+// Call the start function to start the application
 start();
-
