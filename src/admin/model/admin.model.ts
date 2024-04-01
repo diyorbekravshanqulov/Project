@@ -52,4 +52,6 @@ export class Admin extends Model<Admin, AdminCreationAttr> {
     type: DataType.STRING,
   })
   hashedRefreshToken: string;
+
+  activationLink: string;
 }

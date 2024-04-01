@@ -17,6 +17,8 @@ import { Admin } from './admin/model/admin.model';
 import { Category } from './categories/model/category.model';
 import { Region } from './region/model/region.model';
 import { District } from './district/model/district.model';
+import { MailModule } from './mail/mail.module';
+import { Comfort } from './comfort/model/comfort.model';
 
 @Module({
   imports: [
@@ -31,7 +33,7 @@ import { District } from './district/model/district.model';
       username: process.env.POSTGRES_USER, // Getting username from environment variables
       password: process.env.POSTGRES_PASSWORD, // Getting password from environment variables
       database: process.env.POSTGRES_DB, // Getting database name from environment variables
-      models: [Users, Admin, Category, Region, District], // Associating Sequelize models with the database
+      models: [Users, Admin, Category, Region, District, Comfort], // Associating Sequelize models with the database
       autoLoadModels: true, // Automatically loading models from the specified paths
       sync: { alter: true }, // Synchronizing database schema with model definitions (altering tables)
       logging: true, // Enabling logging for database operations
@@ -44,6 +46,7 @@ import { District } from './district/model/district.model';
     DistrictModule,
     AdminModule,
     RegionModule,
+    MailModule,
   ],
   controllers: [], // No controllers defined in this module
   providers: [], // No providers defined in this module

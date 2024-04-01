@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+} from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectModel } from '@nestjs/sequelize';
@@ -7,12 +11,15 @@ import { JwtService } from '@nestjs/jwt';
 import { Response } from 'express';
 import * as bcrypt from 'bcrypt';
 import { v4 } from 'uuid';
+import { MailService } from '../mail/mail.service';
+import { LoginUserDto } from './dto/login_user.dto';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectModel(Users) private readonly userRepo: typeof Users, // Injecting the Sequelize model for User
     private readonly jwtService: JwtService, // Injecting the JwtService for token generation
+    private readonly mailService: MailService,
   ) {}
 
   // Method to generate access and refresh tokens for a given user
@@ -81,6 +88,13 @@ export class UsersService {
       httpOnly: true, // HTTP only cookie
     });
 
+    try {
+      await this.mailService.sendMail(updatedUser[1][0]);
+    } catch (error) {
+      console.log(error);
+      throw new BadRequestException('Send error');
+    }
+
     // Prepare response object
     const response = {
       message: 'User registered',
@@ -94,6 +108,146 @@ export class UsersService {
   // Method to create a new user
   async create(createUserDto: CreateUserDto) {
     return this.userRepo.create(createUserDto);
+  }
+
+  async activate(link: string) {
+    if (!link) {
+      throw new BadRequestException('Activation link not found');
+    }
+    const updateUser = await this.userRepo.update(
+      { isActive: true },
+      {
+        where: { activationLink: link, isActive: false },
+        returning: true,
+      },
+    );
+    if (!updateUser[1][0]) {
+      throw new BadRequestException('User already activated');
+    }
+    const response = {
+      message: 'User activated successfully',
+      user: updateUser[1][0].isActive,
+    };
+    return response;
+  }
+
+  async login(loginUserDto: LoginUserDto, res: Response) {
+    const { email, password } = loginUserDto;
+    const user = await this.userRepo.findOne({ where: { email } });
+    if (!user) {
+      throw new BadRequestException('User not found');
+    }
+    if (!user.isActive) {
+      throw new BadRequestException('User not activated');
+    }
+    const isMatchPass = await bcrypt.compare(password, user.hashedPassword);
+
+    if (!isMatchPass) {
+      throw new BadRequestException('Password is not match');
+    }
+
+    const tokens = await this.getTokens(user);
+
+    // Hash the refresh token and generate activation link
+    const hashedRefreshToken = await bcrypt.hash(tokens.refresh_token, 7);
+    const activationLink = v4();
+
+    // Update the user with hashed refresh token and activation link
+    const updatedUser = await this.userRepo.update(
+      { hashedRefreshToken, activationLink },
+      { where: { id: user.id }, returning: true },
+    );
+
+    // Set refresh token as a cookie in the response
+    res.cookie('refresh_token', tokens.refresh_token, {
+      maxAge: 15 * 24 * 60 * 1000, // 15 days expiration time
+      httpOnly: true, // HTTP only cookie
+    });
+
+    // Prepare response object
+    const response = {
+      message: 'User registered',
+      user: updatedUser[1][0],
+      tokens,
+    };
+
+    return response; // Return the response object
+  }
+
+  async logout(refreshToken: string, res: Response) {
+    const userData = await this.jwtService.verify(refreshToken, {
+      secret: process.env.REFRESH_TOKEN_KEY,
+    });
+
+    if (!userData) {
+      throw new ForbiddenException('User not verified');
+    }
+
+    const updateUser = await this.userRepo.update(
+      {
+        hashedPassword: null,
+      },
+      {
+        where: { id: userData.id },
+        returning: true,
+      },
+    );
+    res.clearCookie('refresh_token');
+    const reponse = {
+      message: 'User logged out successfully',
+      user_refresh_token: updateUser[1][0].hashedRefreshToken,
+    };
+    return reponse;
+  }
+
+  async refreshToken(userId: number, refreshToken: string, res: Response) {
+    console.log(refreshToken);
+
+    const decodecToken = await this.jwtService.decode(refreshToken);
+    if (userId != decodecToken['id']) {
+      throw new BadRequestException('user not found');
+    }
+    const user = await this.userRepo.findOne({ where: { id: userId } });
+
+    if (!user || !user.hashedRefreshToken) {
+      throw new BadRequestException('user not found');
+    }
+
+    const tokenMatch = await bcrypt.compare(
+      refreshToken,
+      user.hashedRefreshToken,
+    );
+
+    if (!tokenMatch) {
+      throw new ForbiddenException('Forbiddin');
+    }
+
+    const tokens = await this.getTokens(user);
+
+    // Hash the refresh token and generate activation link
+    const hashedRefreshToken = await bcrypt.hash(tokens.refresh_token, 7);
+    const activationLink = v4();
+
+    // Update the user with hashed refresh token and activation link
+    const updatedUser = await this.userRepo.update(
+      { hashedRefreshToken, activationLink },
+      { where: { id: user.id }, returning: true },
+    );
+
+    // Set refresh token as a cookie in the response
+    res.cookie('refresh_token', tokens.refresh_token, {
+      maxAge: 15 * 24 * 60 * 1000, // 15 days expiration time
+      httpOnly: true, // HTTP only cookie
+    });
+
+    // Prepare response object
+    const response = {
+      message: 'User refreshed',
+      user: updatedUser[1][0],
+      tokens,
+    };
+
+    return response;
   }
 
   // Method to find all users

@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   Res,
+  HttpCode,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -14,6 +15,8 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
 import { Users } from './model/user.model';
+import { LoginUserDto } from './dto/login_user.dto';
+import { CookieGetter } from '../decorators/cookieGetter.decorator';
 
 @ApiTags('Users') // Tags the controller with 'Users' for Swagger documentation
 @Controller('users') // Defines the base route for this controller
@@ -24,7 +27,7 @@ export class UsersController {
   @ApiOperation({ summary: 'Register a new user' }) // Description for Swagger documentation
   @ApiResponse({ status: 201, type: Users }) // Response definition for Swagger documentation
   @Post('signup') // Defines HTTP POST method and endpoint route
-  registration(
+  async registration(
     @Body() createUserDto: CreateUserDto, // Request body containing user data
     @Res({ passthrough: true }) res: Response, // Express Response object for setting cookies
   ) {
@@ -35,6 +38,38 @@ export class UsersController {
   @Post() // Defines HTTP POST method and endpoint route
   async create(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto); // Calls the create method from the service
+  }
+
+  @HttpCode(200)
+  @Post('login')
+  async login(
+    @Body() loginUserDto: LoginUserDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    return this.usersService.login(loginUserDto, res);
+  }
+
+  @HttpCode(200)
+  @Post('logout')
+  async logout(
+    @CookieGetter('refresh_token') refreshToken: string,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    return this.usersService.logout(refreshToken, res);
+  }
+
+  @HttpCode(200)
+  @Post(':id/refresh')
+  async refresh(
+    @Param('id') id: number,
+    @CookieGetter('refresh_token') refreshToken: string,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    return this.usersService.refreshToken(+id, refreshToken, res);
+  }
+  @Get('activate/:link')
+  async activate(@Param('link') link: string) {
+    return this.usersService.activate(link);
   }
 
   // Endpoint for retrieving all users

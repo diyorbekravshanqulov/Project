@@ -107,6 +107,9 @@ export class Users extends Model<Users, IUserCreationAttr> {
   })
   hashedRefreshToken: string; // Hashed refresh token column
 
+  @Column({
+    type: DataType.STRING,
+  })
   activationLink: string; // Activation link for email verification
 
   // No Swagger comment for class declaration as it is self-explanatory
