@@ -19,6 +19,12 @@ import { Region } from './region/model/region.model';
 import { District } from './district/model/district.model';
 import { MailModule } from './mail/mail.module';
 import { Comfort } from './comfort/model/comfort.model';
+import { MediaModule } from './media/media.module';
+import { ConfortStadiumModule } from './confort_stadium/confort_stadium.module';
+import { StadiumsModule } from './stadiums/stadiums.module';
+import { Media } from './media/model/media.model';
+import { ComfortStadium } from './confort_stadium/model/confort_stadium.model';
+import { Stadiums } from './stadiums/model/stadium.model';
 
 @Module({
   imports: [
@@ -33,7 +39,7 @@ import { Comfort } from './comfort/model/comfort.model';
       username: process.env.POSTGRES_USER, // Getting username from environment variables
       password: process.env.POSTGRES_PASSWORD, // Getting password from environment variables
       database: process.env.POSTGRES_DB, // Getting database name from environment variables
-      models: [Users, Admin, Category, Region, District, Comfort], // Associating Sequelize models with the database
+      models: [Users, Admin, Category, Region, District, Comfort, Media, ComfortStadium, Stadiums], // Associating Sequelize models with the database
       autoLoadModels: true, // Automatically loading models from the specified paths
       sync: { alter: true }, // Synchronizing database schema with model definitions (altering tables)
       logging: true, // Enabling logging for database operations
@@ -47,6 +53,9 @@ import { Comfort } from './comfort/model/comfort.model';
     AdminModule,
     RegionModule,
     MailModule,
+    MediaModule,
+    ConfortStadiumModule,
+    StadiumsModule,
   ],
   controllers: [], // No controllers defined in this module
   providers: [], // No providers defined in this module
