@@ -39,7 +39,17 @@ import { Stadiums } from './stadiums/model/stadium.model';
       username: process.env.POSTGRES_USER, // Getting username from environment variables
       password: process.env.POSTGRES_PASSWORD, // Getting password from environment variables
       database: process.env.POSTGRES_DB, // Getting database name from environment variables
-      models: [Users, Admin, Category, Region, District, Comfort, Media, ComfortStadium, Stadiums], // Associating Sequelize models with the database
+      models: [
+        Users,
+        Admin,
+        Category,
+        Region,
+        District,
+        Comfort,
+        Media,
+        ComfortStadium,
+        Stadiums,
+      ], // Associating Sequelize models with the database
       autoLoadModels: true, // Automatically loading models from the specified paths
       sync: { alter: true }, // Synchronizing database schema with model definitions (altering tables)
       logging: true, // Enabling logging for database operations

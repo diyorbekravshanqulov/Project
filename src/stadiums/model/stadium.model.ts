@@ -1,5 +1,19 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Column, DataType, Model, Table } from 'sequelize-typescript';
+import {
+  BelongsTo,
+  BelongsToMany,
+  Column,
+  DataType,
+  ForeignKey,
+  Model,
+  Table,
+} from 'sequelize-typescript';
+import { Comfort } from '../../comfort/model/comfort.model';
+import { ComfortStadium } from '../../confort_stadium/model/confort_stadium.model';
+import { District } from '../../district/model/district.model';
+import { Region } from '../../region/model/region.model';
+import { Users } from '../../users/model/user.model';
+import { Category } from '../../categories/model/category.model';
 
 // Interface defining the attributes needed to create a Stadium
 interface StadiumCreationAttr {
@@ -35,6 +49,7 @@ export class Stadiums extends Model<Stadiums, StadiumCreationAttr> {
   @ApiProperty({
     description: 'Category ID of the stadium',
   })
+  @ForeignKey(() => Category)
   @Column({
     type: DataType.INTEGER,
   })
@@ -43,6 +58,7 @@ export class Stadiums extends Model<Stadiums, StadiumCreationAttr> {
   @ApiProperty({
     description: 'Owner ID of the stadium',
   })
+  @ForeignKey(() => Users)
   @Column({
     type: DataType.INTEGER,
   })
@@ -83,6 +99,7 @@ export class Stadiums extends Model<Stadiums, StadiumCreationAttr> {
   @ApiProperty({
     description: 'Region ID of the stadium',
   })
+  @ForeignKey(() => Region)
   @Column({
     type: DataType.INTEGER,
   })
@@ -91,6 +108,7 @@ export class Stadiums extends Model<Stadiums, StadiumCreationAttr> {
   @ApiProperty({
     description: 'District ID of the stadium',
   })
+  @ForeignKey(() => District)
   @Column({
     type: DataType.INTEGER,
   })
@@ -128,4 +146,19 @@ export class Stadiums extends Model<Stadiums, StadiumCreationAttr> {
     type: DataType.INTEGER,
   })
   endTime: number;
+
+  @BelongsTo(() => Category)
+  category: Category;
+
+  @BelongsTo(() => Users)
+  users: Users;
+
+  @BelongsTo(() => Region)
+  region: Region;
+
+  @BelongsTo(() => District)
+  district: District;
+
+  @BelongsToMany(() => Comfort, () => ComfortStadium)
+  comfort: Comfort[];
 }

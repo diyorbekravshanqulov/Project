@@ -1,5 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Column, DataType, Model, Table } from 'sequelize-typescript';
+import {
+  BelongsTo,
+  Column,
+  DataType,
+  ForeignKey,
+  Model,
+  Table,
+} from 'sequelize-typescript';
+import { Stadiums } from '../../stadiums/model/stadium.model';
+import { Comfort } from '../../comfort/model/comfort.model';
 
 // Interface for defining attributes required for creating a new ComfortStadium entry
 interface ComfortStadiumCreationAttr {
@@ -27,6 +36,7 @@ export class ComfortStadium extends Model<
     description: 'ID of the stadium associated with the comfort',
     required: true,
   })
+  @ForeignKey(() => Stadiums)
   @Column({
     type: DataType.INTEGER,
     allowNull: false,
@@ -37,9 +47,16 @@ export class ComfortStadium extends Model<
     description: 'ID of the comfort associated with the stadium',
     required: true,
   })
+  @ForeignKey(() => Comfort)
   @Column({
     type: DataType.INTEGER,
     allowNull: false,
   })
   comfortId: number; // ID of the comfort associated with the stadium
+
+  @BelongsTo(() => Stadiums)
+  stadium: Stadiums;
+
+  @BelongsTo(() => Comfort)
+  comfort: Comfort;
 }

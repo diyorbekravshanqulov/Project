@@ -89,7 +89,6 @@ export class CreateStadiumDto {
     required: true,
   })
   @IsDate()
-  @IsNotEmpty()
   buildAt: Date;
 
   // Starting time of stadium operations

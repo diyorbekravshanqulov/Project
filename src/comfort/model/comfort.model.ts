@@ -1,4 +1,12 @@
-import { Column, DataType, Model, Table } from 'sequelize-typescript';
+import {
+  BelongsToMany,
+  Column,
+  DataType,
+  Model,
+  Table,
+} from 'sequelize-typescript';
+import { Stadiums } from '../../stadiums/model/stadium.model';
+import { ComfortStadium } from '../../confort_stadium/model/confort_stadium.model';
 
 // Define the interface for Comfort entity creation attributes
 interface ComfortCreationAttr {
@@ -11,11 +19,14 @@ export class Comfort extends Model<Comfort, ComfortCreationAttr> {
     type: DataType.INTEGER,
     primaryKey: true,
     autoIncrement: true,
-  })w
+  })
   id: number; // Unique identifier for the comfort option
 
   @Column({
     type: DataType.STRING,
   })
   name: string; // Name of the comfort option
+
+  @BelongsToMany(() => Stadiums, () => ComfortStadium)
+  stadium: Stadiums[];
 }

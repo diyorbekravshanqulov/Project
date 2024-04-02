@@ -39,6 +39,7 @@ export class Category extends Model<Category, CategoryCreationAttr> {
   @ForeignKey(() => Category)
   @Column({
     type: DataType.INTEGER,
+    defaultValue: 1
   })
   parentId: number; // ID of the parent category
 

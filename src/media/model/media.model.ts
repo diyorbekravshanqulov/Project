@@ -1,5 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Column, DataType, Model, Table } from 'sequelize-typescript';
+import {
+  BelongsTo,
+  Column,
+  DataType,
+  ForeignKey,
+  Model,
+  Table,
+} from 'sequelize-typescript';
+import { Stadiums } from '../../stadiums/model/stadium.model';
 
 // Interface for defining attributes required for creating a new Media entry
 interface MediaCreationAttr {
@@ -25,6 +33,7 @@ export class Media extends Model<Media, MediaCreationAttr> {
     description: 'ID of the stadium associated with the media',
     required: true,
   })
+  @ForeignKey(() => Stadiums)
   @Column({
     type: DataType.INTEGER,
     allowNull: false,
@@ -50,4 +59,7 @@ export class Media extends Model<Media, MediaCreationAttr> {
     allowNull: false,
   })
   description: string; // Description or caption for the media
+
+  @BelongsTo(() => Stadiums)
+  stadiums: Stadiums;
 }
