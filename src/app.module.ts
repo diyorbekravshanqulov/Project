@@ -25,9 +25,25 @@ import { StadiumsModule } from './stadiums/stadiums.module';
 import { Media } from './media/model/media.model';
 import { ComfortStadium } from './confort_stadium/model/confort_stadium.model';
 import { Stadiums } from './stadiums/model/stadium.model';
+import { BotModule } from './bot/bot.module';
+import { TelegrafModule } from 'nestjs-telegraf';
+import { BOT_NAME } from './app.constants';
+import { StadiumTimesModule } from './stadium_times/stadium_times.module';
+import { CartModule } from './cart/cart.module';
+import { UserWalletModule } from './user_wallet/user_wallet.module';
+import { CommmentModule } from './commment/commment.module';
+import { UserCartModule } from './user_cart/user_cart.module';
 
 @Module({
   imports: [
+    TelegrafModule.forRootAsync({
+      botName: BOT_NAME,
+      useFactory: () => ({
+        token: process.env.BOT_TOKEN,
+        middlewares: [],
+        include: [BotModule],
+      }),
+    }),
     // Importing configuration module to load environment variables
     ConfigModule.forRoot({ envFilePath: '.env', isGlobal: true }),
 
@@ -66,6 +82,12 @@ import { Stadiums } from './stadiums/model/stadium.model';
     MediaModule,
     ConfortStadiumModule,
     StadiumsModule,
+    BotModule,
+    StadiumTimesModule,
+    CartModule,
+    UserWalletModule,
+    CommmentModule,
+    UserCartModule,
   ],
   controllers: [], // No controllers defined in this module
   providers: [], // No providers defined in this module

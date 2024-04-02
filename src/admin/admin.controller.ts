@@ -8,6 +8,7 @@ import {
   Delete,
   Res,
   HttpCode,
+  UseGuards,
 } from '@nestjs/common';
 import { CreateAdminDto } from './dto/create-admin.dto';
 import { UpdateAdminDto } from './dto/update-admin.dto';
@@ -17,6 +18,8 @@ import { Response } from 'express';
 import { Admin } from './model/admin.model';
 import { CookieGetter } from '../decorators/cookieGetter.decorator';
 import { LoginAdminDto } from './dto/login_admin.dto';
+import { UserGuard } from '../guards/user.guard';
+import { SelfGuard } from '../guards/self.guard';
 
 @Controller('admin')
 export class AdminController {
@@ -46,7 +49,8 @@ export class AdminController {
     return this.adminService.login(loginAdminDto, res);
   }
 
-  @HttpCode(200)
+  @UseGuards(SelfGuard)
+  @UseGuards(UserGuard)
   @Post('logout')
   async logout(
     @CookieGetter('refresh_token') refreshToken: string,
@@ -64,7 +68,7 @@ export class AdminController {
   ) {
     return this.adminService.refreshToken(+id, refreshToken, res);
   }
-  
+
   // @Get('activate/:link')
   // async activate(@Param('link') link: string) {
   //   return this.adminService.activate(link);

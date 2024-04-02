@@ -13,6 +13,8 @@ import * as bcrypt from 'bcrypt';
 import { v4 } from 'uuid';
 import { MailService } from '../mail/mail.service';
 import { LoginUserDto } from './dto/login_user.dto';
+import { FindUserDto } from './dto/find_user.dto';
+import { Op } from 'sequelize';
 
 @Injectable()
 export class UsersService {
@@ -248,6 +250,43 @@ export class UsersService {
     };
 
     return response;
+  }
+
+  async findUser(findUserDto: FindUserDto) {
+    const where = {};
+    if (findUserDto.fullName) {
+      where['fullName'] = {
+        [Op.like]: `%${findUserDto.fullName}%`,
+      };
+    }
+
+    if (findUserDto.email) {
+      where['email'] = {
+        [Op.like]: `%${findUserDto.email}%`,
+      };
+    }
+
+    if (findUserDto.phone) {
+      where['phone'] = {
+        [Op.like]: `%${findUserDto.phone}%`,
+      };
+    }
+
+    if (findUserDto.tgLink) {
+      where['tgLink'] = {
+        [Op.like]: `%${findUserDto.tgLink}%`,
+      };
+    }
+
+    console.log(where);
+
+    const users = await this.userRepo.findAll({ where });
+
+    if (users) {
+      throw new BadRequestException('User not found');
+    }
+
+    return users;
   }
 
   // Method to find all users

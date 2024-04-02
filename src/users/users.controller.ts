@@ -8,6 +8,7 @@ import {
   Delete,
   Res,
   HttpCode,
+  UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -17,6 +18,8 @@ import { Response } from 'express';
 import { Users } from './model/user.model';
 import { LoginUserDto } from './dto/login_user.dto';
 import { CookieGetter } from '../decorators/cookieGetter.decorator';
+import { UserGuard } from '../guards/user.guard';
+import { FindUserDto } from './dto/find_user.dto';
 
 @ApiTags('Users') // Tags the controller with 'Users' for Swagger documentation
 @Controller('users') // Defines the base route for this controller
@@ -49,6 +52,7 @@ export class UsersController {
     return this.usersService.login(loginUserDto, res);
   }
 
+  @UseGuards(UserGuard)
   @HttpCode(200)
   @Post('logout')
   async logout(
@@ -70,6 +74,12 @@ export class UsersController {
   @Get('activate/:link')
   async activate(@Param('link') link: string) {
     return this.usersService.activate(link);
+  }
+
+  @HttpCode(200)
+  @Post("find")
+  async findUser(@Body() findUserDto: FindUserDto) {
+    return this.usersService.findUser(findUserDto)
   }
 
   // Endpoint for retrieving all users
