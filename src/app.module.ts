@@ -33,6 +33,7 @@ import { CartModule } from './cart/cart.module';
 import { UserWalletModule } from './user_wallet/user_wallet.module';
 import { CommmentModule } from './commment/commment.module';
 import { UserCartModule } from './user_cart/user_cart.module';
+import { Bot } from './bot/model/bot.model';
 
 @Module({
   imports: [
@@ -56,15 +57,16 @@ import { UserCartModule } from './user_cart/user_cart.module';
       password: process.env.POSTGRES_PASSWORD, // Getting password from environment variables
       database: process.env.POSTGRES_DB, // Getting database name from environment variables
       models: [
-        Users,
-        Admin,
-        Category,
-        Region,
-        District,
-        Comfort,
-        Media,
-        ComfortStadium,
-        Stadiums,
+        // Users,
+        // Admin,
+        // Category,
+        // Region,
+        // District,
+        // Comfort,
+        // Media,
+        // ComfortStadium,
+        // Stadiums,
+        Bot
       ], // Associating Sequelize models with the database
       autoLoadModels: true, // Automatically loading models from the specified paths
       sync: { alter: true }, // Synchronizing database schema with model definitions (altering tables)
@@ -72,22 +74,22 @@ import { UserCartModule } from './user_cart/user_cart.module';
     }),
 
     // Importing various modules for different functionalities
-    UsersModule,
-    ComfortModule,
-    CategoriesModule,
-    DistrictModule,
-    AdminModule,
-    RegionModule,
-    MailModule,
-    MediaModule,
-    ConfortStadiumModule,
-    StadiumsModule,
+    // UsersModule,
+    // ComfortModule,
+    // CategoriesModule,
+    // DistrictModule,
+    // AdminModule,
+    // RegionModule,
+    // MailModule,
+    // MediaModule,
+    // ConfortStadiumModule,
+    // StadiumsModule,
     BotModule,
-    StadiumTimesModule,
-    CartModule,
-    UserWalletModule,
-    CommmentModule,
-    UserCartModule,
+    // StadiumTimesModule,
+    // CartModule,
+    // UserWalletModule,
+    // CommmentModule,
+    // UserCartModule,
   ],
   controllers: [], // No controllers defined in this module
   providers: [], // No providers defined in this module

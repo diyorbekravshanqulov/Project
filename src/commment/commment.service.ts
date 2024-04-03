@@ -1,26 +1,68 @@
-import { Injectable } from '@nestjs/common';
-import { CreateCommmentDto } from './dto/create-commment.dto';
-import { UpdateCommmentDto } from './dto/update-commment.dto';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { CreateCommentDto } from './dto/create-commment.dto';
+import { UpdateCommentDto } from './dto/update-commment.dto';
+import { InjectModel } from '@nestjs/sequelize';
+import { Comments } from './model/commment.entity';
 
 @Injectable()
-export class CommmentService {
-  create(createCommmentDto: CreateCommmentDto) {
-    return 'This action adds a new commment';
+export class CommentService {
+  constructor(@InjectModel(Comments) private commentRepo: typeof Comments) {} // Assuming you have a repository for Comment entity
+
+  /**
+   * Create a new comment.
+   * @param createCommentDto Data to create a new comment.
+   * @returns The newly created comment.
+   */
+  async create(createCommentDto: CreateCommentDto) {
+    return await this.commentRepo.create(createCommentDto);
   }
 
-  findAll() {
-    return `This action returns all commment`;
+  /**
+   * Retrieve all comments.
+   * @returns A list of all comments.
+   */
+  async findAll() {
+    return await this.commentRepo.findAll();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} commment`;
+  /**
+   * Retrieve a comment by ID.
+   * @param id The ID of the comment to retrieve.
+   * @returns The comment with the specified ID.
+   * @throws NotFoundException if the comment is not found.
+   */
+  async findOne(id: number) {
+    return await this.commentRepo.findByPk(id);
   }
 
-  update(id: number, updateCommmentDto: UpdateCommmentDto) {
-    return `This action updates a #${id} commment`;
+  /**
+   * Update a comment by ID.
+   * @param id The ID of the comment to update.
+   * @param updateCommentDto Data to update the comment.
+   * @returns The updated comment.
+   * @throws NotFoundException if the comment is not found.
+   */
+  async update(
+    id: number,
+    updateCommentDto: UpdateCommentDto,
+  ) {
+    const com = await this.commentRepo.update(updateCommentDto, {
+      where: { id },
+      returning: true,
+    });
+    return com[1][0];
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} commment`;
+  /**
+   * Remove a comment by ID.
+   * @param id The ID of the comment to remove.
+   * @throws NotFoundException if the comment is not found.
+   */
+  async remove(id: number) {
+    const result = await this.commentRepo.destroy({ where: { id } });
+    if (result == 0) {
+      return "Not found"
+    }
+    return 'removed';
   }
 }
