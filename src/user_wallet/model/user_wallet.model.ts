@@ -1,5 +1,6 @@
-import { Table, Column, Model, DataType } from 'sequelize-typescript';
+import { Table, Column, Model, DataType, ForeignKey, BelongsTo } from 'sequelize-typescript';
 import { ApiProperty } from '@nestjs/swagger';
+import { Users } from '../../users/model/user.model';
 
 // Interface representing the attributes required to create a user wallet entry
 interface IUserWalletCreationAttr {
@@ -9,6 +10,10 @@ interface IUserWalletCreationAttr {
 
 @Table({ tableName: 'user_wallet' }) // Define table name
 export class UserWallet extends Model<UserWallet, IUserWalletCreationAttr> {
+  @Column({ type: DataType.INTEGER, primaryKey: true, autoIncrement: true })
+  id: number
+
+  @ForeignKey(() => Users)
   @ApiProperty({ description: 'The ID of the user' })
   @Column({ type: DataType.INTEGER, allowNull: false })
   userId: number; // ID of the user
@@ -16,4 +21,7 @@ export class UserWallet extends Model<UserWallet, IUserWalletCreationAttr> {
   @ApiProperty({ description: 'The amount in the wallet' })
   @Column({ type: DataType.FLOAT, allowNull: false })
   wallet: number; // Amount in the wallet
+
+  @BelongsTo(() => Users)
+  users: Users;
 }

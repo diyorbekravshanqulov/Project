@@ -22,7 +22,7 @@ export class CommentService {
    * @returns A list of all comments.
    */
   async findAll() {
-    return await this.commentRepo.findAll();
+    return await this.commentRepo.findAll({ include: { all: true } });
   }
 
   /**
@@ -42,10 +42,7 @@ export class CommentService {
    * @returns The updated comment.
    * @throws NotFoundException if the comment is not found.
    */
-  async update(
-    id: number,
-    updateCommentDto: UpdateCommentDto,
-  ) {
+  async update(id: number, updateCommentDto: UpdateCommentDto) {
     const com = await this.commentRepo.update(updateCommentDto, {
       where: { id },
       returning: true,
@@ -61,7 +58,7 @@ export class CommentService {
   async remove(id: number) {
     const result = await this.commentRepo.destroy({ where: { id } });
     if (result == 0) {
-      return "Not found"
+      return 'Not found';
     }
     return 'removed';
   }

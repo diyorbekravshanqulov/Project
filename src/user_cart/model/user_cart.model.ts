@@ -1,4 +1,13 @@
-import { Table, Column, Model, DataType } from 'sequelize-typescript';
+import {
+  Table,
+  Column,
+  Model,
+  DataType,
+  ForeignKey,
+  BelongsTo,
+} from 'sequelize-typescript';
+import { Users } from '../../users/model/user.model';
+import { User } from 'telegraf/typings/core/types/typegram';
 
 interface UserCartCreationAttr {
   userId: string;
@@ -15,6 +24,7 @@ export class UserCart extends Model<UserCart, UserCartCreationAttr> {
   @Column({ type: DataType.INTEGER, primaryKey: true, autoIncrement: true })
   id: number;
 
+  @ForeignKey(() => Users)
   @Column({ type: DataType.STRING, allowNull: false })
   userId: string; // ID of the user
 
@@ -35,4 +45,7 @@ export class UserCart extends Model<UserCart, UserCartCreationAttr> {
 
   @Column({ type: DataType.BOOLEAN, allowNull: false })
   isMain: boolean; // Indicates whether the card is the main card for the user
+
+  @BelongsTo(() => Users)
+  users: Users;
 }

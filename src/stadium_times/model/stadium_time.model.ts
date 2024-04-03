@@ -1,4 +1,5 @@
-import { Table, Column, DataType, Model } from 'sequelize-typescript';
+import { Table, Column, DataType, Model, ForeignKey, BelongsTo } from 'sequelize-typescript';
+import { Stadiums } from '../../stadiums/model/stadium.model';
 
 // Interface for defining the attributes required to create a new stadium time entry
 interface StadiumTimesCreationAttr {
@@ -17,6 +18,7 @@ export class StadiumTimes extends Model<
   @Column({ type: DataType.INTEGER, primaryKey: true, autoIncrement: true })
   id: number; // Unique ID for the stadium time entry
 
+  @ForeignKey(() => Stadiums)
   @Column({ type: DataType.INTEGER, allowNull: false })
   stadiumId: number; // ID of the stadium
 
@@ -28,4 +30,7 @@ export class StadiumTimes extends Model<
 
   @Column({ type: DataType.FLOAT, allowNull: false })
   price: number; // Price for the stadium slot
+
+  @BelongsTo(() => Stadiums)
+  stadiums:Stadiums
 }

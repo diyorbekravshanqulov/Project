@@ -1,4 +1,13 @@
-import { Column, Model, Table, DataType } from 'sequelize-typescript';
+import {
+  Column,
+  Model,
+  Table,
+  DataType,
+  ForeignKey,
+  BelongsTo,
+} from 'sequelize-typescript';
+import { Users } from '../../users/model/user.model';
+import { Stadiums } from '../../stadiums/model/stadium.model';
 
 /**
  * Represents a comment left by a user about a stadium.
@@ -22,6 +31,7 @@ export class Comments extends Model<Comments, CommentCreationAttr> {
    * The ID of the user who left the comment.
    * @type {number}
    */
+  @ForeignKey(() => Users)
   @Column({ type: DataType.INTEGER, allowNull: false })
   userId: number;
 
@@ -29,6 +39,7 @@ export class Comments extends Model<Comments, CommentCreationAttr> {
    * The ID of the stadium being commented on.
    * @type {number}
    */
+  @ForeignKey(() => Stadiums)
   @Column({ type: DataType.INTEGER, allowNull: false })
   stadiumId: number;
 
@@ -38,4 +49,10 @@ export class Comments extends Model<Comments, CommentCreationAttr> {
    */
   @Column({ type: DataType.STRING, allowNull: false })
   impression: string;
+
+  @BelongsTo(() => Users)
+  users: Users;
+
+  @BelongsTo(() => Stadiums)
+  stadiums: Stadiums;
 }

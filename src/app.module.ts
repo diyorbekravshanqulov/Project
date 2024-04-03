@@ -34,6 +34,11 @@ import { UserWalletModule } from './user_wallet/user_wallet.module';
 import { CommmentModule } from './commment/commment.module';
 import { UserCartModule } from './user_cart/user_cart.module';
 import { Bot } from './bot/model/bot.model';
+import { StadiumTimes } from './stadium_times/model/stadium_time.model';
+import { Cart } from './cart/model/cart.model';
+import { UserWallet } from './user_wallet/model/user_wallet.model';
+import { Comments } from './commment/model/commment.entity';
+import { UserCart } from './user_cart/model/user_cart.model';
 
 @Module({
   imports: [
@@ -57,16 +62,21 @@ import { Bot } from './bot/model/bot.model';
       password: process.env.POSTGRES_PASSWORD, // Getting password from environment variables
       database: process.env.POSTGRES_DB, // Getting database name from environment variables
       models: [
-        // Users,
-        // Admin,
-        // Category,
-        // Region,
-        // District,
-        // Comfort,
-        // Media,
-        // ComfortStadium,
-        // Stadiums,
-        Bot
+        Users,
+        Admin,
+        Category,
+        Region,
+        District,
+        Comfort,
+        Media,
+        ComfortStadium,
+        Stadiums,
+        Bot,
+        StadiumTimes,
+        Cart,
+        UserWallet,
+        Comments,
+        UserCart,
       ], // Associating Sequelize models with the database
       autoLoadModels: true, // Automatically loading models from the specified paths
       sync: { alter: true }, // Synchronizing database schema with model definitions (altering tables)
@@ -74,22 +84,22 @@ import { Bot } from './bot/model/bot.model';
     }),
 
     // Importing various modules for different functionalities
-    // UsersModule,
-    // ComfortModule,
-    // CategoriesModule,
-    // DistrictModule,
-    // AdminModule,
-    // RegionModule,
-    // MailModule,
-    // MediaModule,
-    // ConfortStadiumModule,
-    // StadiumsModule,
+    UsersModule,
+    ComfortModule,
+    CategoriesModule,
+    DistrictModule,
+    AdminModule,
+    RegionModule,
+    MailModule,
+    MediaModule,
+    ConfortStadiumModule,
+    StadiumsModule,
     BotModule,
-    // StadiumTimesModule,
-    // CartModule,
-    // UserWalletModule,
-    // CommmentModule,
-    // UserCartModule,
+    StadiumTimesModule,
+    CartModule,
+    UserWalletModule,
+    CommmentModule,
+    UserCartModule,
   ],
   controllers: [], // No controllers defined in this module
   providers: [], // No providers defined in this module
