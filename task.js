@@ -35,22 +35,12 @@ console.log(bumpCounter('RRL')); // Output: "1 2 1"
 
 // ------------------------------------------------
 
-// Mrs Jefferson is a great teacher. One of her strategies that helped her to reach astonishing results in the learning process is to have some fun with her students. At school, she wants to make an arrangement of her class to play a certain game with her pupils. For that, she needs to create the arrangement with the minimum amount of groups that have consecutive sizes.
+// There is a row of ants. An ant can be represented by letter "R" - facing right, and "L" - facing left. Every ant is moving with constant speed. When ants collide, they are changing their direction to opposite. Our task is to count collisions for each ant. There is a starting gap between ants, lets say that it is 2 meters.
 
-// Let's see. She has 14 students. After trying a bit she could do the needed arrangement: [5, 4, 3, 2]
+// Example: "RL"
 
-// one group of 5 students
-// another group of 4 students
-// then, another one of 3
-// and finally, the smallest group of 2 students.
-// As the game was a success, she was asked to help to the other classes to teach and show the game. That's why she desperately needs some help to make this required arrangements that make her spend a lot of time.
+// Should return "1 1" Because they collide each other once, and then they never collide, because earth is flat.
 
-// To make things worse, she found out that there are some classes with some special number of students that is impossible to get that arrangement.
+// You will have to count bumps up to 1 000 000 ants.
 
-// Please, help this teacher!
-
-// Your code will receive the number of students of the class. It should output the arrangement as an array with the consecutive sizes of the groups in decreasing order.
-
-// For the special case that no arrangement of the required feature is possible the code should output [-1]    
-
-// The value of n is unknown and may be pretty high because some classes joined to to have fun with the game.
+// I am not a real author of this great algorithm challenge. I cant name the author though. Here is the only source i could have find https://sio2.mimuw.edu.pl/c/pa-2024-1/p/mro/ , it is in polish.
