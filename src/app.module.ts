@@ -39,6 +39,7 @@ import { Cart } from './cart/model/cart.model';
 import { UserWallet } from './user_wallet/model/user_wallet.model';
 import { Comments } from './commment/model/commment.entity';
 import { UserCart } from './user_cart/model/user_cart.model';
+import { OtpModule } from './otp/otp.module';
 
 @Module({
   imports: [
@@ -63,20 +64,20 @@ import { UserCart } from './user_cart/model/user_cart.model';
       database: process.env.POSTGRES_DB, // Getting database name from environment variables
       models: [
         Users,
-        Admin,
-        Category,
-        Region,
-        District,
-        Comfort,
-        Media,
-        ComfortStadium,
-        Stadiums,
+        // Admin,
+        // Category,
+        // Region,
+        // District,
+        // Comfort,
+        // Media,
+        // ComfortStadium,
+        // Stadiums,
         Bot,
-        StadiumTimes,
-        Cart,
-        UserWallet,
-        Comments,
-        UserCart,
+        // StadiumTimes,
+        // Cart,
+        // UserWallet,
+        // Comments,
+        // UserCart,
       ], // Associating Sequelize models with the database
       autoLoadModels: true, // Automatically loading models from the specified paths
       sync: { alter: true }, // Synchronizing database schema with model definitions (altering tables)
@@ -85,21 +86,22 @@ import { UserCart } from './user_cart/model/user_cart.model';
 
     // Importing various modules for different functionalities
     UsersModule,
-    ComfortModule,
-    CategoriesModule,
-    DistrictModule,
-    AdminModule,
-    RegionModule,
-    MailModule,
-    MediaModule,
-    ConfortStadiumModule,
-    StadiumsModule,
+    // ComfortModule,
+    // CategoriesModule,
+    // DistrictModule,
+    // AdminModule,
+    // RegionModule,
+    // MailModule,
+    // MediaModule,
+    // ConfortStadiumModule,
+    // StadiumsModule,
     BotModule,
-    StadiumTimesModule,
-    CartModule,
-    UserWalletModule,
-    CommmentModule,
-    UserCartModule,
+    OtpModule,
+    // StadiumTimesModule,
+    // CartModule,
+    // UserWalletModule,
+    // CommmentModule,
+    // UserCartModule,
   ],
   controllers: [], // No controllers defined in this module
   providers: [], // No providers defined in this module

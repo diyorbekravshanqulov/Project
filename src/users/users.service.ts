@@ -15,6 +15,9 @@ import { MailService } from '../mail/mail.service';
 import { LoginUserDto } from './dto/login_user.dto';
 import { FindUserDto } from './dto/find_user.dto';
 import { Op } from 'sequelize';
+import { PhoneUserDto } from '../bot/dto/phone-user.dto';
+import * as otpGenerator from 'otp-generator';
+import { BotService } from '../bot/bot.service';
 
 @Injectable()
 export class UsersService {
@@ -22,6 +25,7 @@ export class UsersService {
     @InjectModel(Users) private readonly userRepo: typeof Users, // Injecting the Sequelize model for User
     private readonly jwtService: JwtService, // Injecting the JwtService for token generation
     private readonly mailService: MailService,
+    private readonly botService: BotService
   ) {}
 
   // Method to generate access and refresh tokens for a given user
@@ -287,6 +291,22 @@ export class UsersService {
     }
 
     return users;
+  }
+
+  async newOTP(phoneUserDto: PhoneUserDto) {
+    const phone_number = phoneUserDto.phone;
+
+    const otp = otpGenerator.generate(4, {
+      upperCaseAlphabets: false,
+      lowerCaseAlphabets: false,
+      specialChars: false,
+    });
+
+    const isSend = await this.botService.sendOtp(phone_number, otp)
+    if (!isSend) {
+      throw new BadRequestException("Before You have to register from bot")
+    }
+    return { message: "Ok" }
   }
 
   // Method to find all users

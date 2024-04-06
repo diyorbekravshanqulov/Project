@@ -20,6 +20,7 @@ import { LoginUserDto } from './dto/login_user.dto';
 import { CookieGetter } from '../decorators/cookieGetter.decorator';
 import { UserGuard } from '../guards/user.guard';
 import { FindUserDto } from './dto/find_user.dto';
+import { PhoneUserDto } from '../bot/dto/phone-user.dto';
 
 @ApiTags('Users') // Tags the controller with 'Users' for Swagger documentation
 @Controller('users') // Defines the base route for this controller
@@ -77,9 +78,9 @@ export class UsersController {
   }
 
   @HttpCode(200)
-  @Post("find")
+  @Post('find')
   async findUser(@Body() findUserDto: FindUserDto) {
-    return this.usersService.findUser(findUserDto)
+    return this.usersService.findUser(findUserDto);
   }
 
   // Endpoint for retrieving all users
@@ -92,6 +93,12 @@ export class UsersController {
   @Get(':id') // Defines HTTP GET method and endpoint route with a parameter
   async findOne(@Param('id') id: string) {
     return this.usersService.findOne(+id); // Calls the findOne method from the service
+  }
+
+  @HttpCode(200)
+  @Post('new_otp')
+  async newOtp(@Body() phoneUserDto: PhoneUserDto) {
+    return this.usersService.newOTP(phoneUserDto);
   }
 
   // Endpoint for updating a user by ID
