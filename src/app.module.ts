@@ -40,6 +40,8 @@ import { UserWallet } from './user_wallet/model/user_wallet.model';
 import { Comments } from './commment/model/commment.entity';
 import { UserCart } from './user_cart/model/user_cart.model';
 import { OtpModule } from './otp/otp.module';
+import { Otp } from './otp/model/otp.model';
+import { SmsModule } from './sms/sms.module';
 
 @Module({
   imports: [
@@ -78,6 +80,7 @@ import { OtpModule } from './otp/otp.module';
         // UserWallet,
         // Comments,
         // UserCart,
+        Otp
       ], // Associating Sequelize models with the database
       autoLoadModels: true, // Automatically loading models from the specified paths
       sync: { alter: true }, // Synchronizing database schema with model definitions (altering tables)
@@ -97,6 +100,7 @@ import { OtpModule } from './otp/otp.module';
     // StadiumsModule,
     BotModule,
     OtpModule,
+    SmsModule,
     // StadiumTimesModule,
     // CartModule,
     // UserWalletModule,

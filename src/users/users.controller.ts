@@ -21,6 +21,7 @@ import { CookieGetter } from '../decorators/cookieGetter.decorator';
 import { UserGuard } from '../guards/user.guard';
 import { FindUserDto } from './dto/find_user.dto';
 import { PhoneUserDto } from '../bot/dto/phone-user.dto';
+import { VerifyOtpDto } from './dto/verify-otp.dto';
 
 @ApiTags('Users') // Tags the controller with 'Users' for Swagger documentation
 @Controller('users') // Defines the base route for this controller
@@ -99,6 +100,12 @@ export class UsersController {
   @Post('new_otp')
   async newOtp(@Body() phoneUserDto: PhoneUserDto) {
     return this.usersService.newOTP(phoneUserDto);
+  }
+
+  @HttpCode(200)
+  @Post('verify_otp')
+  async verifyOtp(@Body() verifyOtpDto: VerifyOtpDto) {
+    return this.usersService.verifyOtp(verifyOtpDto);
   }
 
   // Endpoint for updating a user by ID

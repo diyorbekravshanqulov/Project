@@ -7,16 +7,19 @@ import { JwtModule } from '@nestjs/jwt';
 import { MailModule } from '../mail/mail.module';
 import { BotModule } from '../bot/bot.module';
 import { Bot } from '../bot/model/bot.model';
+import { Otp } from '../otp/model/otp.model';
+import { OtpModule } from '../otp/otp.module';
 
 @Module({
   imports: [
     // Imports SequelizeModule to provide Sequelize functionality and register the 'Users' model
-    SequelizeModule.forFeature([Users, Bot]),
+    SequelizeModule.forFeature([Users, Bot, Otp]),
     // Imports JwtModule to provide JWT functionality for user authentication
     JwtModule.register({}),
     // Imports MailModule to provide MailModule for send email
     MailModule,
-    BotModule
+    BotModule,
+    OtpModule,
   ],
   // Declares UsersController to define HTTP endpoints related to user management
   controllers: [UsersController],

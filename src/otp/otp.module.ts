@@ -1,7 +1,9 @@
 import { Module } from '@nestjs/common';
-import { OtpService } from './otp.service';
+import { SequelizeModule } from '@nestjs/sequelize';
+import { Otp } from './model/otp.model';
 
 @Module({
-  providers: [OtpService]
+  imports: [SequelizeModule.forFeature([Otp])],
+  providers: []
 })
 export class OtpModule {}
